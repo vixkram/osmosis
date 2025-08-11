@@ -1,0 +1,106 @@
+# Spot-Only Osmosis Fork Configuration
+# This configuration file contains settings specific to the spot-only fork of Osmosis
+# that removes all perpetuals and margin trading functionality.
+
+[chain]
+# Chain identifier for the spot-only fork
+chain_id = "osmosis-spot-1"
+# Human-readable name for the fork
+chain_name = "Osmosis Spot-Only DEX"
+# Description of the fork's purpose
+description = "A spot-only decentralized exchange fork of Osmosis, focused on AMM trading without leveraged positions"
+
+[governance-safeguards]
+# Enable governance safeguards to prevent leverage modules
+enabled = true
+# Disable any leverage-related modules from being installed
+disable_leverage_modules = true
+# Additional proposal types to restrict (can be extended as needed)
+additional_restricted_types = [
+    "perpetuals",
+    "margin",
+    "leverage",
+    "futures",
+    "derivatives"
+]
+# Additional modules to restrict (can be extended as needed)
+additional_restricted_modules = [
+    "x/perpetuals",
+    "x/margin",
+    "x/leverage",
+    "x/futures",
+    "x/derivatives"
+]
+
+[trading]
+# Enforce spot-only trading
+spot_only = true
+# Maximum position size (set to 0 to disable leveraged positions)
+max_leverage = 0
+# Disable margin trading
+margin_trading_enabled = false
+# Disable perpetual contracts
+perpetual_contracts_enabled = false
+
+[modules]
+# Core DEX modules that should remain enabled
+enabled_modules = [
+    "x/gamm",                    # Generalized AMM pools
+    "x/concentrated-liquidity",  # Concentrated liquidity pools
+    "x/cosmwasmpool",           # CosmWasm custom pools
+    "x/poolmanager",            # Pool routing and management
+    "x/protorev",               # MEV protection
+    "x/incentives",             # Liquidity mining rewards
+    "x/pool-incentives",        # Pool-specific incentives
+    "x/superfluid",             # Superfluid staking
+    "x/txfees",                 # Transaction fee management
+    "x/mint",                   # Token minting
+    "x/bank",                   # Token transfers
+    "x/staking",                # Proof of stake
+    "x/distribution",           # Reward distribution
+    "x/gov",                    # Governance
+    "x/slashing",               # Validator slashing
+    "x/auth",                   # Authentication
+    "x/authz",                  # Authorization
+    "x/crisis",                 # Crisis management
+    "x/evidence",               # Evidence handling
+    "x/params",                 # Parameter management
+    "x/upgrade",                # Chain upgrades
+    "x/vesting",                # Token vesting
+    "x/wasm",                   # CosmWasm smart contracts
+    "x/ibc",                    # Inter-blockchain communication
+    "x/transfer",               # IBC token transfers
+    "x/capability",             # Capability management
+    "x/epochs"                  # Epoch management
+]
+
+# Modules that are explicitly disabled for spot-only trading
+disabled_modules = [
+    "x/perpetuals",
+    "x/margin",
+    "x/leverage",
+    "x/futures",
+    "x/derivatives"
+]
+
+[genesis]
+# Genesis configuration specific to spot-only fork
+spot_only_mode = true
+# Disable any leverage-related genesis state
+disable_leverage_genesis = true
+
+[deployment]
+# Deployment-specific settings
+binary_name = "osmosisd-spot"
+service_name = "osmosis-spot-dex"
+# Default ports (can be customized during deployment)
+rpc_port = 26657
+api_port = 1317
+grpc_port = 9090
+p2p_port = 26656
+# Recommended minimum hardware requirements
+min_cpu_cores = 4
+min_ram_gb = 16
+min_disk_gb = 500
+# Network settings
+network_type = "mainnet"  # or "testnet"

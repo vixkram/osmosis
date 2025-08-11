@@ -601,6 +601,9 @@ func NewOsmosisApp(
 			auctionKeeper: *app.AppKeepers.AuctionKeeper,
 			txConfig:      txConfig,
 		},
+		GovernanceSafeguardParams{
+			governanceSafeguardKeeper: app.GovernanceSafeguardsKeeper,
+		},
 		appCodec,
 	)
 

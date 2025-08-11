@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  osmosis-spot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GIT_VERSION: ${GIT_VERSION:-latest}
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        BUILD_TAGS: "netgo,ledger,muslc"
+    container_name: osmosis-spot-dex
+    ports:
+      - "26656:26656"  # P2P port
+      - "26657:26657"  # RPC port
+      - "1317:1317"    # API port
+      - "9090:9090"    # gRPC port
+    volumes:
+      - osmosis_data:/osmosis/.osmosisd
+      - ./config/spot-only-fork.toml:/osmosis/config/spot-only-fork.toml:ro
+      - ./config/genesis.json:/osmosis/.osmosisd/config/genesis.json:ro
+    environment:
+      # Spot-only configuration
+      - SPOT_ONLY_MODE=true
+      - DISABLE_LEVERAGE_MODULES=true
+      - CHAIN_ID=osmosis-spot-1
+      - MONIKER=osmosis-spot-node
+      # Node configuration
+      - LOG_LEVEL=info
+      - MINIMUM_GAS_PRICES=0.0025uosmo
+      # Governance safeguards
+      - GOVERNANCE_SAFEGUARDS_ENABLED=true
+    command: ["start", "--home", "/osmosis/.osmosisd"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "osmosisd", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - osmosis-spot-network
+
+  # Optional: Cosmovisor version for automatic upgrades
+  osmosis-spot-cosmovisor:
+    build:
+      context: .
+      dockerfile: Dockerfile.cosmovisor
+      args:
+        GIT_VERSION: ${GIT_VERSION:-latest}
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        BUILD_TAGS: "netgo,ledger,muslc"
+        COSMOVISOR_VERSION: "v1.5.0"
+    container_name: osmosis-spot-cosmovisor
+    ports:
+      - "26656:26656"
+      - "26657:26657"
+      - "1317:1317"
+      - "9090:9090"
+    volumes:
+      - osmosis_data:/osmosis/.osmosisd
+      - ./config/spot-only-fork.toml:/osmosis/config/spot-only-fork.toml:ro
+    environment:
+      # Cosmovisor configuration
+      - DAEMON_NAME=osmosisd
+      - DAEMON_HOME=/osmosis/.osmosisd
+      - DAEMON_ALLOW_DOWNLOAD_BINARIES=false
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+      - DAEMON_LOG_BUFFER_SIZE=512
+      - UNSAFE_SKIP_BACKUP=false
+      # Spot-only configuration
+      - SPOT_ONLY_MODE=true
+      - DISABLE_LEVERAGE_MODULES=true
+      - CHAIN_ID=osmosis-spot-1
+      - MONIKER=osmosis-spot-cosmovisor
+      # Governance safeguards
+      - GOVERNANCE_SAFEGUARDS_ENABLED=true
+    command: ["run", "start", "--home", "/osmosis/.osmosisd"]
+    restart: unless-stopped
+    profiles:
+      - cosmovisor
+    networks:
+      - osmosis-spot-network
+
+  # Optional: Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: osmosis-spot-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    networks:
+      - osmosis-spot-network
+
+  # Optional: Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: osmosis-spot-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    networks:
+      - osmosis-spot-network
+
+volumes:
+  osmosis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  osmosis-spot-network:
+    driver: bridge
+
+# Usage examples:
+# 
+# Start basic spot-only node:
+# docker-compose -f docker-compose.spot-only.yml up -d osmosis-spot
+#
+# Start with cosmovisor:
+# docker-compose -f docker-compose.spot-only.yml --profile cosmovisor up -d osmosis-spot-cosmovisor
+#
+# Start with monitoring:
+# docker-compose -f docker-compose.spot-only.yml --profile monitoring up -d
+#
+# Start everything:
+# docker-compose -f docker-compose.spot-only.yml --profile cosmovisor --profile monitoring up -d

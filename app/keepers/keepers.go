@@ -119,6 +119,9 @@ import (
 	auctiontypes "github.com/skip-mev/block-sdk/v2/x/auction/types"
 
 	storetypes "cosmossdk.io/store/types"
+	
+	governancesafeguardskeeper "github.com/osmosis-labs/osmosis/v30/x/governance-safeguards/keeper"
+	governancesafeguardstypes "github.com/osmosis-labs/osmosis/v30/x/governance-safeguards/types"
 )
 
 const (
@@ -190,6 +193,9 @@ type AppKeepers struct {
 
 	// BlockSDK
 	AuctionKeeper *auctionkeeper.Keeper
+
+	// Governance Safeguards
+	GovernanceSafeguardsKeeper governancesafeguardskeeper.Keeper
 
 	// keys to access the substores
 	keys    map[string]*storetypes.KVStoreKey
@@ -562,6 +568,15 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	appKeepers.AuctionKeeper = &auctionKeeper
+
+	// Initialize governance safeguards keeper
+	governanceSafeguardsKeeper := governancesafeguardskeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys["governance-safeguards"],
+		governancesafeguardstypes.DefaultConfig(),
+		bApp.Logger().With("module", "governance-safeguards"),
+	)
+	appKeepers.GovernanceSafeguardsKeeper = governanceSafeguardsKeeper
 
 	appKeepers.ValidatorSetPreferenceKeeper = &validatorSetPreferenceKeeper
 
@@ -938,6 +953,7 @@ func KVStoreKeys() []string {
 		ibchookstypes.StoreKey,
 		icqtypes.StoreKey,
 		packetforwardtypes.StoreKey,
+		"governance-safeguards",
 		cosmwasmpooltypes.StoreKey,
 		auctiontypes.StoreKey,
 		smartaccounttypes.StoreKey,

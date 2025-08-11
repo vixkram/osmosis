@@ -1,4 +1,4 @@
-# Osmosis
+# Osmosis Spot-Only DEX
 
 ![Banner!](assets/banner.png)
 
@@ -17,11 +17,24 @@ Code](https://img.shields.io/tokei/lines/github/osmosis-labs/osmosis?style=flat-
 Super-Linter](https://img.shields.io/github/actions/workflow/status/osmosis-labs/osmosis/lint.yml?style=flat-square&label=Lint)](https://github.com/marketplace/actions/super-linter)
 [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/osmosis)
 
-As the largest DEX in the Cosmos, Osmosis is a source of liquidity for over 50 sovereign blockchains connected via IBC. Pioneering in its approach, Osmosis offers a dynamic trading and liquidity provision experience, integrating non-IBC assets from other ecosystems, including: Bitcoin, Ethereum, Solana, Avalanche, and Polkadot. Initially adopting Balancer-style pools, Osmosis now also features a concentrated liquidity model that is orders of magnitude more capital efficient, meaning that significantly less liquidity is required to handle the same amount of trading volume with minimal slippage.
+**This is a spot-only fork of Osmosis DEX, focused exclusively on spot trading without any leveraged trading capabilities.**
 
-As a true Layer 1 appchain, Osmosis has greater control over the full blockchain stack than traditional smart contract DEXs, which must follow the code of the parent chain that it is built on. This fine-grained control has enabled, for example, the development of Superfluid Staking, an extension of Proof of Stake that allows assets at the application layer to be staked to secure the chain. The customizability of appchains also allows implementing features like the Protocol Revenue module, which enables Osmosis to conduct on-chain cyclic arbitrage on behalf of OSMO stakers, balancing prices across pools while generating real yield revenue from this volume. Additionally, as a sovereign appchain, Osmosis governance can vote on upgrades to the protocol. One example of this was the introduction of a Taker Fee, which switched on the collection of exchange fees to generate a diverse yield from Osmosis volume and distribute it to OSMO stakers.
+As a leading DEX in the Cosmos ecosystem, this Osmosis fork provides liquidity for sovereign blockchains connected via IBC. This version offers a clean, simplified trading and liquidity provision experience, integrating non-IBC assets from other ecosystems, including: Bitcoin, Ethereum, Solana, Avalanche, and Polkadot. Initially adopting Balancer-style pools, this fork also features a concentrated liquidity model that is orders of magnitude more capital efficient, meaning that significantly less liquidity is required to handle the same amount of trading volume with minimal slippage.
 
-Osmosis is bringing the centralized exchange experience to the decentralized world by building a cross-chain DEX and trading suite that aims to interconnect all chains via IBC. To reach this goal, Osmosis hosts an ever-expanding suite of DeFi applications, including: lending/borrowing, margin trading, strategy vaults, perpetuals, fiat on-ramping, NFTs, stablecoins, etc.—all of the functionalities that centralized exchanges offer, and more, but in the trust-minimized environment of decentralized finance.
+As a true Layer 1 appchain, this Osmosis fork has greater control over the full blockchain stack than traditional smart contract DEXs, which must follow the code of the parent chain that it is built on. This fine-grained control has enabled, for example, the development of Superfluid Staking, an extension of Proof of Stake that allows assets at the application layer to be staked to secure the chain. The customizability of appchains also allows implementing features like the Protocol Revenue module, which enables the chain to conduct on-chain cyclic arbitrage on behalf of OSMO stakers, balancing prices across pools while generating real yield revenue from this volume. Additionally, as a sovereign appchain, governance can vote on upgrades to the protocol. One example of this was the introduction of a Taker Fee, which switched on the collection of exchange fees to generate a diverse yield from trading volume and distribute it to OSMO stakers.
+
+This spot-only DEX fork focuses on bringing secure, decentralized spot trading to the cross-chain ecosystem by building a simplified DEX that interconnects chains via IBC. This fork provides core DeFi functionality including: **spot trading, liquidity provision, automated market makers (AMM), concentrated liquidity pools, yield farming, and staking rewards**—delivering essential DEX functionality in a trust-minimized environment without the complexity and risks associated with leveraged trading.
+
+## Spot-Only Focus
+
+**This fork explicitly removes all leveraged trading capabilities** to provide a clean, secure, and simplified DEX experience:
+
+- ✅ **Supported**: Spot trading, liquidity provision, AMM pools, concentrated liquidity, yield farming, staking
+- ❌ **Not Supported**: Perpetuals, margin trading, leveraged positions, futures contracts
+- 🔒 **Governance Safeguards**: Built-in restrictions prevent future addition of leveraged trading modules
+- 🛡️ **Security First**: Eliminates liquidation risks and complexity associated with leveraged products
+
+This approach ensures maximum security and simplicity while maintaining all core DEX functionality that users expect from a modern decentralized exchange.
 
 ## System Requirements
 

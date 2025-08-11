@@ -42,6 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Features
+
+* Spot-Only Fork: This version represents a spot-only fork of Osmosis DEX, removing all leveraged trading capabilities while maintaining core DEX functionality including spot trading, liquidity provision, AMM pools, concentrated liquidity, yield farming, and staking rewards.
+
 ## v30.0.0
 
 ### State Breaking

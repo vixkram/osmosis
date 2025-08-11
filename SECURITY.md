@@ -2,15 +2,17 @@
 
 ## Introduction
 
-Security researchers are essential in identifying vulnerabilities that may impact the Osmosis ecosystem. If you have discovered a security vulnerability in the Osmosis chain or any repository managed by Osmosis, we encourage you to notify us using one of the methods outlined below.
+Security researchers are essential in identifying vulnerabilities that may impact this Osmosis spot-only DEX fork ecosystem. If you have discovered a security vulnerability in this spot-only fork or any related repository, we encourage you to notify us using one of the methods outlined below.
+
+**Note: This is a spot-only fork of Osmosis that removes all leveraged trading capabilities, focusing exclusively on secure spot trading functionality.**
 
 ### Guidelines for Responsible Vulnerability Testing and Reporting
 
-1. **Refrain from testing vulnerabilities on our publicly accessible environments**, including but not limited to:
-  - Osmosis mainnet `osmosis-1` 
-  - Osmosis frontend: `app.osmosis.zone` 
-  - Osmosis public testnets
-  - Osmosis testnet frontend
+1. **Refrain from testing vulnerabilities on publicly accessible environments**, including but not limited to:
+  - Any mainnet deployments of this spot-only fork
+  - Any frontend applications using this fork
+  - Any public testnets running this fork
+  - Any testnet frontend applications
 
 2. **Avoid reporting security vulnerabilities through public channels, including GitHub issues**
 
@@ -20,11 +22,11 @@ To privately report a security vulnerability, please choose one of the following
 
 ### 1. Email
 
-Send your detailed vulnerability report to `security@osmosis.team`.
+Send your detailed vulnerability report to the appropriate security contact for this fork.
 
 ### 2. GitHub Private Vulnerability Reporting
 
-Utilize [GitHub's Private Vulnerability Reporting](https://github.com/osmosis-labs/osmosis/security/advisories/new) for confidential disclosure.
+Utilize GitHub's Private Vulnerability Reporting for confidential disclosure through this repository's security advisories.
 
 ## Submit Vulnerability Report
 
@@ -49,7 +51,7 @@ During the vulnerability disclosure process, we ask security researchers to keep
 During this time:
 
 - Avoid exploiting any vulnerabilities you discover.
-- Demonstrate good faith by not disrupting or degrading Osmosis's services.
+- Demonstrate good faith by not disrupting or degrading services running this spot-only fork.
 
 ## Severity Characterization
 
@@ -69,4 +71,4 @@ Though we don't have an official bug bounty program, we generally offer rewards 
 
 ## Feedback on this Policy
 
-For recommendations on how to improve this policy, either submit a pull request or send an email to `security@osmosis.team`.
+For recommendations on how to improve this policy, please submit a pull request to this repository.

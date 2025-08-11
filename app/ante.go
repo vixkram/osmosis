@@ -27,6 +27,9 @@ import (
 	txfeestypes "github.com/osmosis-labs/osmosis/v30/x/txfees/types"
 
 	auctionante "github.com/skip-mev/block-sdk/v2/x/auction/ante"
+	
+	governancesafeguards "github.com/osmosis-labs/osmosis/v30/x/governance-safeguards"
+	governancesafeguardskeeper "github.com/osmosis-labs/osmosis/v30/x/governance-safeguards/keeper"
 )
 
 // BlockSDKAnteHandlerParams are the parameters necessary to configure the block-sdk antehandlers
@@ -34,6 +37,11 @@ type BlockSDKAnteHandlerParams struct {
 	mevLane       auctionante.MEVLane
 	auctionKeeper auctionkeeper.Keeper
 	txConfig      client.TxConfig
+}
+
+// GovernanceSafeguardParams are the parameters necessary to configure governance safeguards
+type GovernanceSafeguardParams struct {
+	governanceSafeguardKeeper governancesafeguardskeeper.Keeper
 }
 
 // Link to default ante handler used by cosmos sdk:
@@ -54,6 +62,7 @@ func NewAnteHandler(
 	signModeHandler *txsigning.HandlerMap,
 	channelKeeper *ibckeeper.Keeper,
 	blockSDKParams BlockSDKAnteHandlerParams,
+	govSafeguardParams GovernanceSafeguardParams,
 	appCodec codec.Codec,
 ) sdk.AnteHandler {
 	mempoolFeeOptions := txfeestypes.NewMempoolFeeOptions(appOpts)
@@ -61,6 +70,7 @@ func NewAnteHandler(
 	sendblockOptions := osmoante.NewSendBlockOptions(appOpts)
 	sendblockDecorator := osmoante.NewSendBlockDecorator(sendblockOptions, appCodec)
 	deductFeeDecorator := txfeeskeeper.NewDeductFeeDecorator(*txFeesKeeper, accountKeeper, bankKeeper, nil)
+	governanceSafeguardDecorator := governancesafeguards.NewGovernanceSafeguardDecorator(govSafeguardParams.governanceSafeguardKeeper)
 
 	// classicSignatureVerificationDecorator is the old flow to enable a circuit breaker
 	classicSignatureVerificationDecorator := sdk.ChainAnteDecorators(
@@ -104,6 +114,8 @@ func NewAnteHandler(
 		wasmkeeper.NewCountTXDecorator(txCounterStoreKey),
 		ante.NewExtensionOptionsDecorator(nil),
 		v9.MsgFilterDecorator{},
+		// Governance safeguard decorator to prevent leverage-related proposals
+		governanceSafeguardDecorator,
 		// Use Mempool Fee Decorator from our txfees module instead of default one from auth
 		// https://github.com/cosmos/cosmos-sdk/blob/master/x/auth/middleware/fee.go#L34
 		mempoolFeeDecorator,
